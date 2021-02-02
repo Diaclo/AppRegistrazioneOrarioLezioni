@@ -7,6 +7,7 @@ from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import WebDriverWait     
 from selenium.webdriver.common.by import By     
 from selenium.webdriver.support import expected_conditions as EC
+import Selenium2Library
 
 class loginBot:
    def __init__(self, username, password):
@@ -24,6 +25,7 @@ class loginBot:
       elearning = bot.find_element_by_class_name('elearning a')
       elearning.send_keys(Keys.RETURN)
       time.sleep(5)
+      
       url = bot.current_url()
       print(url)
       
