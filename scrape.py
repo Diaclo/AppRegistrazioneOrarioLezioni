@@ -52,7 +52,3 @@ class WebScraper:
             if mese in text:
                 text = text.replace(mese, TraduzioneMesi[mese] + ' ')
                 return text
-
-
-webScraper = WebScraper('https://www.unibo.it/it/didattica/insegnamenti/insegnamento/2020/461145/orariolezioni')
-print(webScraper.orarioInizio[0])
