@@ -2,10 +2,14 @@
 import time
 import requests
 from selenium import webdriver
+from selenium.webdriver import ActionChains
 from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.support.ui import WebDriverWait     
+from selenium.webdriver.common.by import By     
+from selenium.webdriver.support import expected_conditions as EC
 
 class loginBot:
-    def __init__(self, username, password):
+   def __init__(self, username, password):
       self.username = username
       self.password = password
       self.caps = webdriver.DesiredCapabilities.CHROME.copy()
@@ -13,20 +17,17 @@ class loginBot:
       self.bot = webdriver.Chrome(desired_capabilities=self.caps)     
       self.bot.maximize_window()
 
-    def goToPage(self):
-        bot = self.bot
-        bot.get('https://www.unibo.it/it/didattica/insegnamenti/insegnamento/2020/461145/orariolezioni')
-        elearning = bot.find_element_by_class_name('elearning a')
-        elearning.send_keys(Keys.RETURN)
+   def goToPage(self):
+      bot = self.bot
+      bot.get('https://www.unibo.it/it/didattica/insegnamenti/insegnamento/2020/461145/orariolezioni')
+      # elearning = bot.find_element(By.XPATH('//*[@id="u-content-large"]/div[2]/div/div/ul/li[1]/p/a')).get_attribute('herf')
+      bot.get(bot.find_element(By.XPATH('//*[@id="u-content-large"]/div[2]/div/div/ul/li[1]/p/a')).get_attribute('herf'))
 
-        # Non trova l'alert dell'apertura di teams
-        bot.switch_to_alert('Aprire Microsoft Teams?')
-        bot.find_element_by_link_text('Annulla').send_keys(Keys.RETURN)
-        bot.switch_to_default_content()
-        # ########################################
+      join = bot.find_element_by_link_text('Continua in questo browser')
+      join.send_keys(Keys.RETURN)
 
 
-    def login(self):
+   def login(self):
       bot = self.bot
       bot.get('link') # aggiungere il link
       time.sleep(5)
