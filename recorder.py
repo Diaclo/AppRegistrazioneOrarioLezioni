@@ -1,62 +1,35 @@
+
+import numpy as np
+import cv2
 from PIL import ImageGrab
+import win32api
+import winGuiAuto
 import win32gui
-
-import win32ui
-from ctypes import windll
-import Image
-
-toplist, winlist = [], []
-def enum_cb(hwnd, results):
-   winlist.append((hwnd, win32gui.GetWindowText(hwnd)))
-
-win32gui.EnumWindows(enum_cb, toplist)
-
-browser = [(hwnd, title) for hwnd, title in winlist if 'chrome' in title.lower()]
-browser = browser[0]
-
-hwnd = browser[0]
-"""
-win32gui.SetForegroundWindow(hwnd)
-bbox = win32gui.GetWindowRect(hwnd)
-img = ImageGrab.grab(bbox)
-img.show()
-"""
-
-# Change the line below depending on whether you want the whole window
-# or just the client area. 
-#left, top, right, bot = win32gui.GetClientRect(hwnd)
-left, top, right, bot = win32gui.GetWindowRect(hwnd)
-w = right - left
-h = bot - top
-
-hwndDC = win32gui.GetWindowDC(hwnd)
-mfcDC  = win32ui.CreateDCFromHandle(hwndDC)
-saveDC = mfcDC.CreateCompatibleDC()
-
-saveBitMap = win32ui.CreateBitmap()
-saveBitMap.CreateCompatibleBitmap(mfcDC, w, h)
-
-saveDC.SelectObject(saveBitMap)
-
-# Change the line below depending on whether you want the whole window
-# or just the client area. 
-#result = windll.user32.PrintWindow(hwnd, saveDC.GetSafeHdc(), 1)
-result = windll.user32.PrintWindow(hwnd, saveDC.GetSafeHdc(), 0)
-print(result)
-
-bmpinfo = saveBitMap.GetInfo()
-bmpstr = saveBitMap.GetBitmapBits(True)
-
-im = Image.frombuffer(
-   'RGB',
-   (bmpinfo['bmWidth'], bmpinfo['bmHeight']),
-   bmpstr, 'raw', 'BGRX', 0, 1)
-
-win32gui.DeleteObject(saveBitMap.GetHandle())
-saveDC.DeleteDC()
-mfcDC.DeleteDC()
-win32gui.ReleaseDC(hwnd, hwndDC)
-
-if result == 1:
-   #PrintWindow Succeeded
-   im.save("test.png")
+import win32con
+ 
+cap = cv2.VideoCapture(0)
+ 
+# Capture the window frame by frame
+image_list = []
+for _ in range(70):
+    ret, frame = cap.read()
+    cv2.imshow('SCORE',frame)
+    cv2.waitKey(1)
+    hwnd = winGuiAuto.findTopWindow("SCORE")
+    win32gui.SetWindowPos(hwnd, win32con.HWND_TOPMOST, 0,0,0,0,
+    win32con.SWP_NOMOVE | win32con.SWP_NOSIZE)
+    rect = win32gui.GetWindowPlacement(hwnd)[-1]
+    image = ImageGrab.grab(rect)
+    image_list.append(image)
+ 
+height,width,channel = np.array(image).shape
+cap.release()
+cv2.destroyAllWindows()
+ 
+ 
+out = cv2.VideoWriter('video.avi',cv2.VideoWriter_fourcc(*'DIVX'), 5, (width,height))
+ 
+for images in image_list:
+   out.write(cv2.cvtColor(np.array(images),cv2.COLOR_BGR2RGB))
+   
+out.release()
