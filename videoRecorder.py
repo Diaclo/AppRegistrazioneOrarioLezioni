@@ -2,8 +2,11 @@
 import cv2
 import numpy
 import pyautogui
+import pygetwindow
 import win32gui
 from dragonfly import Window
+import time
+import os
 
 class recordVideo:
    def __init__(self, durataVideo, nomeVideo, windowName):
@@ -37,7 +40,22 @@ class recordVideo:
 wn = win32gui.GetWindowText(win32gui.GetForegroundWindow())
 print( wn )
 
-wl = Window.get_all_windows()
+wl = Window.get_matching_windows(executable=None, title='GitHub Desktop')
 print(wl)
 
-video = recordVideo( 10, 'prova', str(wn) )
+z1 = pygetwindow.getAllTitles()
+print(z1)
+
+# get screensize
+x,y = pyautogui.size()
+print(f"width={x}\theight={y}")
+
+x2,y2 = pyautogui.size()
+x2,y2=int(str(x2)),int(str(y2))
+print(x2//2)
+print(y2//2)
+
+my = pygetwindow.getWindowsWithTitle(z1[4])
+print(my)
+
+#video = recordVideo( 10, 'prova', str(wn) )
