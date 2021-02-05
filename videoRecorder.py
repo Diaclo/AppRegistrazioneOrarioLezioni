@@ -28,6 +28,6 @@ class recordVideo:
 
       cv2.destroyAllWindows()
       out.release()
-      print('registrazione completata')
+      print('...registrazione completata...')
 
 video = recordVideo(20, 'prova')
