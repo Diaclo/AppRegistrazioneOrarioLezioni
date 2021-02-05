@@ -1,17 +1,8 @@
 
 import time
-import requests
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
-from selenium.webdriver.support.ui import WebDriverWait     
-from selenium.webdriver.common.by import By     
 from selenium.webdriver.support import expected_conditions as EC
-
-"""
-from SeleniumLibrary import WebDriver
-from SeleniumLibrary import AlertKeywords
-from SeleniumLibrary import BrowserManagementKeywords
-"""
 
 class loginBot:
    def __init__(self, username):
@@ -23,7 +14,8 @@ class loginBot:
 
    def goToPage(self):
       bot = self.bot
-      """
+      """ # Accesso alla pagina 'Orari Corso'
+      -> non più necessaria, si accede direttamente alla stanza teams
       bot.get('https://www.unibo.it/it/didattica/insegnamenti/insegnamento/2020/461145/orariolezioni')
       time.sleep(5)
       elearning = bot.find_element_by_class_name('elearning a')
@@ -44,8 +36,8 @@ class loginBot:
                attempt = 1
                print('done!!!')
          except:
-            time.sleep(20)
             print('none')
+            time.sleep(10)
 
    # script per login
    def login(self):
