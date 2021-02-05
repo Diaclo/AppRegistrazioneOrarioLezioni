@@ -1,13 +1,11 @@
 
 import cv2
-import os
 import numpy
 import pyautogui
 import win32gui
-import virtualvideo
 class recordVideo:
    def __init__(self, durataVideo, nomeVideo, windowName):
-
+  
       # tengo per ora variabili intermedie per testing,
       # alla fine sarà presente solo la conversione in ora e
       # si passerà come durata direttamente la durata in ore
@@ -22,11 +20,10 @@ class recordVideo:
       screenSize = pyautogui.size()
       outCodec = cv2.VideoWriter_fourcc(*'mp4v')
       prop = cv2.WINDOW_FULLSCREEN
-      cv2.setWindowProperty(self.windowName, prop, prop)
       out = cv2.VideoWriter(self.nome, outCodec, fps, screenSize)
 
       for i in range( self.durata ):
-         img = pyautogui.screenshot()
+         img = pyautogui.getWindowTitle()
          frame = numpy.array(img)
          frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
          out.write(frame)
@@ -35,6 +32,7 @@ class recordVideo:
       out.release()
       print('...registrazione completata...')
 
-wn = win32gui.GetWindowText(win32gui.GetForegroundWindow())
-print( wn )
-video = recordVideo( 20, 'prova', wn )
+#wn = win32gui.GetWindowText(win32gui.GetForegroundWindow())
+#print( wn )
+
+video = recordVideo( 20, 'prova', 'Nuova scheda - Google Chrome' )
