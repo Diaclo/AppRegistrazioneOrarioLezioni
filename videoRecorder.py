@@ -3,6 +3,8 @@ import cv2
 import numpy
 import pyautogui
 import win32gui
+from dragonfly import Window
+
 class recordVideo:
    def __init__(self, durataVideo, nomeVideo, windowName):
   
@@ -23,7 +25,6 @@ class recordVideo:
       out = cv2.VideoWriter(self.nome, outCodec, fps, screenSize)
 
       for i in range( self.durata ):
-         pyautogui.getWindow(windowName)
          img = pyautogui.screenshot()
          frame = numpy.array(img)
          frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
@@ -33,7 +34,10 @@ class recordVideo:
       out.release()
       print('...registrazione completata...')
 
-#wn = win32gui.GetWindowText(win32gui.GetForegroundWindow())
-#print( wn )
+wn = win32gui.GetWindowText(win32gui.GetForegroundWindow())
+print( wn )
 
-video = recordVideo( 2, 'prova', 'Calcolatrice' )
+wl = Window.get_all_windows()
+print(wl)
+
+video = recordVideo( 10, 'prova', str(wn) )
