@@ -2,6 +2,7 @@
 import cv2
 import numpy
 import pyautogui
+import winGuiAuto
 
 class recordVideo:
    def __init__(self, durataVideo, nomeVideo):
@@ -18,6 +19,7 @@ class recordVideo:
       self.nome = nomeVideo + ".mp4"
       screenSize = pyautogui.size()
       outCodec = cv2.VideoWriter_fourcc(*'mp4v')
+      cv2.setWindowProperty(winname='Google Chrome', prop_id=None, prop_value=None)
       out = cv2.VideoWriter(self.nome, outCodec, fps, screenSize)
 
       for i in range( self.durata ):
