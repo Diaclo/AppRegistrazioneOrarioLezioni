@@ -1,11 +1,12 @@
 
 import cv2
+import os
 import numpy
 import pyautogui
-import winGuiAuto
-
+import win32gui
+import virtualvideo
 class recordVideo:
-   def __init__(self, durataVideo, nomeVideo):
+   def __init__(self, durataVideo, nomeVideo, windowName):
 
       # tengo per ora variabili intermedie per testing,
       # alla fine sarà presente solo la conversione in ora e
@@ -17,9 +18,11 @@ class recordVideo:
       fps = 24.0
       self.durata = durataVideo * int(fps)
       self.nome = nomeVideo + ".mp4"
+      self.windowName = windowName
       screenSize = pyautogui.size()
       outCodec = cv2.VideoWriter_fourcc(*'mp4v')
-      cv2.setWindowProperty(winname='Google Chrome', prop_id=None, prop_value=None)
+      prop = cv2.WINDOW_FULLSCREEN
+      cv2.setWindowProperty(self.windowName, prop, prop)
       out = cv2.VideoWriter(self.nome, outCodec, fps, screenSize)
 
       for i in range( self.durata ):
@@ -32,4 +35,6 @@ class recordVideo:
       out.release()
       print('...registrazione completata...')
 
-video = recordVideo(20, 'prova')
+wn = win32gui.GetWindowText(win32gui.GetForegroundWindow())
+print( wn )
+video = recordVideo( 20, 'prova', wn )
