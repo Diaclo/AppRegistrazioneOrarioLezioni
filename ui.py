@@ -72,7 +72,8 @@ class CustomDialog(QDialog):
         self.pulisciLayout(hbox)
         hbox.deleteLater()
         self.adjustSize()
-        if len(self.layout) <= 1:
+        print(len(self.layout))
+        if len(self.layout) <= 2:
             self.Rimuovi.setDisabled(True)
 
     def pulisciLayout(self, layout):
