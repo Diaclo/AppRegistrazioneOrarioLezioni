@@ -75,7 +75,7 @@ class loginBot:
       time.sleep(3)
 
 # Chiamata delle funzioni
-log = loginBot('matteo.sacco4@studio.unibo.it', 'UniBo/2018')
+log = loginBot('mail', 'password')
 log.goToPage()
 log.login()
 time.sleep(10)
