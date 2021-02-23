@@ -1,6 +1,9 @@
 import sys
+import csv
+import os
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
+from PyQt5.QtCore import *
 
 
 # System Tray
@@ -35,22 +38,36 @@ class CustomDialog(QDialog):
 
     def setUI(self):
         self.layout = QVBoxLayout()
-        self.buttonBox = QHBoxLayout()
+        self.buttonBox = QGridLayout()
 
         self.Aggiungi = QPushButton('Aggiungi corso')
         self.Rimuovi = QPushButton('Rimuovi corso')
+        self.Salva = QPushButton('Salva')
+        self.Cancella = QPushButton('Cancella')
+        self.UrlOrario = QLabel('Url Orario')
+        self.UrlTeams = QLabel('Url Teams')
         self.Rimuovi.setDisabled(True)
+        self.Salva.setDisabled(True)
         self.Aggiungi.clicked.connect(self.aggiungiLinea)
         self.Rimuovi.clicked.connect(self.rimuoviLinea)
+        self.Salva.clicked.connect(self.save)
+        self.Cancella.clicked.connect(self.reject)
+        self.UrlOrario.setAlignment(Qt.AlignRight)
+        self.UrlTeams.setAlignment(Qt.AlignRight)
 
-        self.buttonBox.addWidget(self.Aggiungi)
-        self.buttonBox.addWidget(self.Rimuovi)
+        self.buttonBox.addWidget(self.Aggiungi, 0, 0)
+        self.buttonBox.addWidget(self.Rimuovi, 0, 1)
+        self.buttonBox.addWidget(self.Salva, 1, 0)
+        self.buttonBox.addWidget(self.Cancella, 1, 1)
+        self.buttonBox.addWidget(self.UrlOrario, 2, 1)
+        self.buttonBox.addWidget(self.UrlTeams, 2, 0)
 
         self.layout.addLayout(self.buttonBox)
         self.setLayout(self.layout)
 
     def aggiungiLinea(self):
         self.Rimuovi.setDisabled(False)
+        self.Salva.setDisabled(False)
 
         hbox = QHBoxLayout()
 
@@ -72,8 +89,8 @@ class CustomDialog(QDialog):
         self.pulisciLayout(hbox)
         hbox.deleteLater()
         self.adjustSize()
-        print(len(self.layout))
         if len(self.layout) <= 2:
+            self.Salva.setDisabled(True)
             self.Rimuovi.setDisabled(True)
 
     def pulisciLayout(self, layout):
@@ -82,13 +99,25 @@ class CustomDialog(QDialog):
             widget = item.widget()
             widget.deleteLater()
 
-    # def accept(self):
-
-    # def reject(self:
+    def save(self):
+        path = QFileDialog.getSaveFileName(self, 'Save File', os.getenv('HOME'), 'CSV(*.csv')
+        widget = []
+        counter = 0
+        if path[0] != '':
+            with open(path[0], "w") as csv_file:
+                writer = csv.writer(csv_file, dialect='excel')
+                # skip QGridLayout
+                hbox = (self.layout.itemAt(i) for i in range(1, self.layout.count()))
+                for w in hbox:
+                    for j in range(w.count()):
+                        widget.append(w.itemAt(j).widget().text())
+                    writer.writerow(widget[counter:])
+                    counter += 3
 
 
 def main():
     app = QApplication(sys.argv)
+    QApplication.setQuitOnLastWindowClosed(False)
     app.setApplicationName("Lesson Recorder")
     app.setApplicationVersion("0.1")
     app.setOrganizationName("Arcara&Sacco")
