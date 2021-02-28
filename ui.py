@@ -10,6 +10,8 @@ from PyQt5.QtCore import *
 # System Tray
 class App(QMainWindow):
 
+    sched = Scheduler()
+
     def __init__(self, parent=None):
         super(App, self).__init__(parent)
 
@@ -37,14 +39,17 @@ class App(QMainWindow):
 
     def eseguiScheduler(self):
         # TODO: guardare bene la creazione e la cancellazione di una class
-        # sched = Scheduler()
         if self.esegui.isChecked():
-            self.esegui.setChecked(True)
-            self.esegui.setText('In esecuzione...')
+            self.modificaEsegui(True, 'In esecuzione...', 'icon2.png')
+            self.sched.accensione()
         else:
-            self.esegui.setChecked(False)
-            self.esegui.setText('Esegui in background')
-            # del sched
+            self.modificaEsegui(False, 'Esegui in background', 'icon.png')
+            self.sched.spegnimento()
+
+    def modificaEsegui(self, boolean, testo, path):
+        self.esegui.setChecked(boolean)
+        self.esegui.setText(testo)
+        self.tray.setIcon(QIcon(path))
 
 
 # Dialog
