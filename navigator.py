@@ -103,14 +103,30 @@ class loginBot:
         partecipa.send_keys(Keys.RETURN)
         time.sleep(3)
 
+    def closeTabs(self):
+        bot = self.bot
+        time.sleep(3)
+        micAd = bot.find_element_by_xpath(
+            "/html/body/div[2]/div[2]/div[2]/div[1]/div/calling-screen/div/div[2]/calling-unified-bar/calling-alert/div/div/div/calling-ufd-popup/div/div[2]/div[4]/button"
+        )
+        micAd.send_keys(Keys.RETURN)
+
+        notificationAd = bot.find_element_by_xpath(
+            "/html/body/div[1]/div/div/div[2]/div/button[2]"
+        )
+        notificationAd.send_keys(Keys.RETURN)
+        time.sleep(3)
+
 
 # Chiamata delle funzioni
 log = loginBot(
-    "mail",
-    "password",
-    "https://teams.microsoft.com/dl/launcher/launcher.html?url=%2F_%23%2Fl%2Fmeetup-join%2F19%3Ameeting_ZTViYWFmNzUtYWUzMy00N2EwLTlmNGQtZjBjM2Y4Y2RiNzBl%40thread.v2%2F0%3Fcontext%3D%257b%2522Tid%2522%253a%2522e99647dc-1b08-454a-bf8c-699181b389ab%2522%252c%2522Oid%2522%253a%2522080683d2-51aa-4842-aa73-291a43203f71%2522%257d%26anon%3Dtrue&type=meetup-join&deeplinkId=c8f0e1f0-ffa7-4355-8b5e-4a0053c0bc48&directDl=true&msLaunch=true&enableMobilePage=true&suppressPrompt=true",
+    "matteo.sacco4@studio.unibo.it",
+    "UniBo/2018",
+    # "https://teams.microsoft.com/dl/launcher/launcher.html?url=%2F_%23%2Fl%2Fmeetup-join%2F19%3Ameeting_ZTViYWFmNzUtYWUzMy00N2EwLTlmNGQtZjBjM2Y4Y2RiNzBl%40thread.v2%2F0%3Fcontext%3D%257b%2522Tid%2522%253a%2522e99647dc-1b08-454a-bf8c-699181b389ab%2522%252c%2522Oid%2522%253a%2522080683d2-51aa-4842-aa73-291a43203f71%2522%257d%26anon%3Dtrue&type=meetup-join&deeplinkId=c8f0e1f0-ffa7-4355-8b5e-4a0053c0bc48&directDl=true&msLaunch=true&enableMobilePage=true&suppressPrompt=true",
+    "https://teams.microsoft.com/dl/launcher/launcher.html?url=%2F_%23%2Fl%2Fmeetup-join%2F19%3Ameeting_YmUzZjg3ZDktM2FkOS00YTA1LThlMDctY2MxZmVmOWIxNjkz%40thread.v2%2F0%3Fcontext%3D%257b%2522Tid%2522%253a%2522e99647dc-1b08-454a-bf8c-699181b389ab%2522%252c%2522Oid%2522%253a%2522080683d2-51aa-4842-aa73-291a43203f71%2522%257d%26anon%3Dtrue&type=meetup-join&deeplinkId=709a6459-2762-4429-ba4e-41f5401ff70d&directDl=true&msLaunch=true&enableMobilePage=true&suppressPrompt=true",
 )
 log.goToPage()
 log.login()
 log.lastjoin()
+log.closeTabs()
 time.sleep(10)
