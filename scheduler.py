@@ -14,9 +14,10 @@ class Scheduler:
         corsi = self.leggiFile()
         for i in corsi:
             scrape = WebScraper(corsi[i][1])
-            orariOggiInizio = [k for k in scrape.orarioInizio if datetime(2021, 3, 4).date() == k.date()]
-            orariOggiFine = [k for k in scrape.orarioFine if datetime(2021, 3, 4).date() == k.date()]
-            self.sched = BackgroundScheduler(daemon=True)
+            date.today()
+            #datetime(2021, 3, 4).date()
+            orariOggiInizio = [k for k in scrape.orarioInizio if date.today() == k.date()]
+            orariOggiFine = [k for k in scrape.orarioFine if date.today() == k.date()]
 
             for j in orariOggiInizio:
                 print(j)
