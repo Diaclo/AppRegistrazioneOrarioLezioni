@@ -5,16 +5,18 @@ from selenium.webdriver.support import expected_conditions as EC
 
 
 class loginBot:
-    def __init__(self, mail, password):
+    def __init__(self, mail, password, link):
         self.mail = mail
         self.password = password
         self.caps = webdriver.DesiredCapabilities.CHROME.copy()
         self.caps["acceptInsecureCerts"] = True
         self.bot = webdriver.Chrome(desired_capabilities=self.caps)
         self.bot.maximize_window()
+        self.link = link
 
-    def goToPage(self, link):
+    def goToPage(self):
         bot = self.bot
+        link = self.link
         bot.get(link)
         join = bot.find_element_by_xpath(
             "/html/body/div/div/div/div[1]/div/div[3]/button[2]"
@@ -76,15 +78,15 @@ class loginBot:
             "/html/body/div/form/div/div/div[1]/div[2]/div/div[2]/div/div[3]/div[2]/div/div/div[1]/input"
         )
         bntNoPermConn.send_keys(Keys.RETURN)
-        time.sleep(5)
 
     def lastjoin(self):
         bot = self.bot
+        time.sleep(10)
         attempt = 0
         while attempt == 0:
             try:
                 continueLastJoin = bot.find_element_by_xpath(
-                    "/html/body/div[5]/div[2]/div/div/div/div[1]/div/div/div[2]/div/button/text()"
+                    "/html/body/div[5]/div[2]/div/div/div/div[1]/div/div/div[2]/div/button"
                 )
                 continueLastJoin.send_keys(Keys.RETURN)
                 if continueLastJoin:
@@ -94,16 +96,21 @@ class loginBot:
                 print("none")
                 time.sleep(10)
 
+        time.sleep(10)
         partecipa = bot.find_element_by_xpath(
             "/html/body/div[2]/div[2]/div[2]/div[1]/div/calling-pre-join-screen/div/div/div[2]/div[1]/div[2]/div/div/section/div[1]/div/div/button"
         )
+        partecipa.send_keys(Keys.RETURN)
+        time.sleep(3)
 
 
 # Chiamata delle funzioni
-log = loginBot("matteo.sacco4@studio.unibo.it", "UniBo/2018")
-log.goToPage(
-    "https://teams.microsoft.com/dl/launcher/launcher.html?url=%2F_%23%2Fl%2Fmeetup-join%2F19%3Ameeting_ZTViYWFmNzUtYWUzMy00N2EwLTlmNGQtZjBjM2Y4Y2RiNzBl%40thread.v2%2F0%3Fcontext%3D%257b%2522Tid%2522%253a%2522e99647dc-1b08-454a-bf8c-699181b389ab%2522%252c%2522Oid%2522%253a%2522080683d2-51aa-4842-aa73-291a43203f71%2522%257d%26anon%3Dtrue&type=meetup-join&deeplinkId=c8f0e1f0-ffa7-4355-8b5e-4a0053c0bc48&directDl=true&msLaunch=true&enableMobilePage=true&suppressPrompt=true"
+log = loginBot(
+    "mail",
+    "password",
+    "https://teams.microsoft.com/dl/launcher/launcher.html?url=%2F_%23%2Fl%2Fmeetup-join%2F19%3Ameeting_ZTViYWFmNzUtYWUzMy00N2EwLTlmNGQtZjBjM2Y4Y2RiNzBl%40thread.v2%2F0%3Fcontext%3D%257b%2522Tid%2522%253a%2522e99647dc-1b08-454a-bf8c-699181b389ab%2522%252c%2522Oid%2522%253a%2522080683d2-51aa-4842-aa73-291a43203f71%2522%257d%26anon%3Dtrue&type=meetup-join&deeplinkId=c8f0e1f0-ffa7-4355-8b5e-4a0053c0bc48&directDl=true&msLaunch=true&enableMobilePage=true&suppressPrompt=true",
 )
+log.goToPage()
 log.login()
 log.lastjoin()
 time.sleep(10)
