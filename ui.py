@@ -1,6 +1,7 @@
 import sys
 import csv
 import os
+from scheduler import Scheduler
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
@@ -8,6 +9,9 @@ from PyQt5.QtCore import *
 
 # System Tray
 class App(QMainWindow):
+
+    sched = Scheduler()
+
     def __init__(self, parent=None):
         super(App, self).__init__(parent)
 
@@ -18,6 +22,11 @@ class App(QMainWindow):
         configurazione = menu.addAction('Configurazione')
         configurazione.triggered.connect(self.openDialog)
 
+        self.esegui = menu.addAction('Esegui in background')
+        self.esegui.triggered.connect(self.eseguiScheduler)
+        self.esegui.setCheckable(True)
+        self.esegui.setChecked(False)
+
         menu.addSeparator()
         esci = menu.addAction('Esci dal programma')
         esci.triggered.connect(lambda: sys.exit())
@@ -27,6 +36,20 @@ class App(QMainWindow):
     def openDialog(self):
         dialog = CustomDialog(self)
         dialog.exec()
+
+    def eseguiScheduler(self):
+        # TODO: guardare bene la creazione e la cancellazione di una class
+        if self.esegui.isChecked():
+            self.modificaEsegui(True, 'In esecuzione...', 'icon2.png')
+            self.sched.accensione()
+        else:
+            self.modificaEsegui(False, 'Esegui in background', 'icon.png')
+            self.sched.spegnimento()
+
+    def modificaEsegui(self, boolean, testo, path):
+        self.esegui.setChecked(boolean)
+        self.esegui.setText(testo)
+        self.tray.setIcon(QIcon(path))
 
 
 # Dialog
@@ -100,19 +123,19 @@ class CustomDialog(QDialog):
             widget.deleteLater()
 
     def save(self):
-        path = QFileDialog.getSaveFileName(self, 'Save File', os.getenv('HOME'), 'CSV(*.csv')
+        # path = QFileDialog.getSaveFileName(self, 'Save File', os.getenv('HOME'), 'CSV(*.csv')
         widget = []
         counter = 0
-        if path[0] != '':
-            with open(path[0], "w") as csv_file:
-                writer = csv.writer(csv_file, dialect='excel')
-                # skip QGridLayout
-                hbox = (self.layout.itemAt(i) for i in range(1, self.layout.count()))
-                for w in hbox:
-                    for j in range(w.count()):
-                        widget.append(w.itemAt(j).widget().text())
-                    writer.writerow(widget[counter:])
-                    counter += 3
+        # if path[0] != '':
+        with open('pyschedule.csv', "w") as csv_file:
+            writer = csv.writer(csv_file, dialect='excel')
+            # skip QGridLayout
+            hbox = (self.layout.itemAt(i) for i in range(1, self.layout.count()))
+            for w in hbox:
+                for j in range(w.count()):
+                    widget.append(w.itemAt(j).widget().text())
+                writer.writerow(widget[counter:])
+                counter += 3
 
 
 def main():
