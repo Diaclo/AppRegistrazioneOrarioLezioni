@@ -21,10 +21,8 @@ class loginBot:
         self.closeTabs()
 
     def goToPage(self):
-        bot = self.bot
-        link = self.link
-        bot.get(link)
-        join = bot.find_element_by_xpath(
+        self.bot.get(self.link)
+        join = self.bot.find_element_by_xpath(
             "/html/body/div/div/div/div[1]/div/div[3]/button[2]"
         )
         join.send_keys(Keys.RETURN)
@@ -33,7 +31,7 @@ class loginBot:
         attempt = 0
         while attempt == 0:
             try:
-                continueJoin = bot.find_element_by_xpath(
+                continueJoin = self.bot.find_element_by_xpath(
                     "/html/body/div[4]/div[2]/div/div/div/div[1]/div/div/div[2]/div/button"
                 )
                 continueJoin.send_keys(Keys.RETURN)
@@ -46,24 +44,23 @@ class loginBot:
 
     # script per login
     def login(self):
-        bot = self.bot
-        userName = bot.find_element_by_xpath(
+        userName = self.bot.find_element_by_xpath(
             "/html/body/div[1]/div[2]/div/div[1]/div/calling-pre-join-screen/div/div/div[2]/div[1]/div[2]/div/div/section/div[1]/div/div[1]/input"
         )
         userName.clear()
         userName.send_keys(self.mail)
         time.sleep(3)
-        join = bot.find_element_by_xpath(
+        join = self.bot.find_element_by_xpath(
             "/html/body/div[1]/div[2]/div/div[1]/div/calling-pre-join-screen/div/div/div[2]/div[1]/div[2]/div/div/section/div[1]/div/div[2]/button"
         )
         join.send_keys(Keys.RETURN)
         time.sleep(3)
-        enter = bot.find_element_by_xpath(
+        enter = self.bot.find_element_by_xpath(
             "/html/body/div[1]/div[2]/div/div[1]/div/calling-pre-join-screen/div/div/div[2]/div[1]/div[1]/p[2]/a"
         )
         enter.send_keys(Keys.RETURN)
         time.sleep(10)
-        email = bot.find_element_by_xpath(
+        email = self.bot.find_element_by_xpath(
             "/html/body/div/form[1]/div/div/div[2]/div/div/div[1]/div[2]/div[2]/div/div/div/div[2]/div[2]/div/input[1]"
         )
         email.clear()
@@ -71,7 +68,7 @@ class loginBot:
         time.sleep(3)
         email.send_keys(Keys.RETURN)
         time.sleep(5)
-        password = bot.find_element_by_xpath(
+        password = self.bot.find_element_by_xpath(
             "/html/body/div[2]/div[2]/div/main/div/div/div/form/div[2]/div[2]/input"
         )
         password.clear()
@@ -80,18 +77,17 @@ class loginBot:
         password.send_keys(Keys.RETURN)
         time.sleep(10)
 
-        bntNoPermConn = bot.find_element_by_xpath(
+        bntNoPermConn = self.bot.find_element_by_xpath(
             "/html/body/div/form/div/div/div[1]/div[2]/div/div[2]/div/div[3]/div[2]/div/div/div[1]/input"
         )
         bntNoPermConn.send_keys(Keys.RETURN)
 
     def lastjoin(self):
-        bot = self.bot
         time.sleep(10)
         attempt = 0
         while attempt == 0:
             try:
-                continueLastJoin = bot.find_element_by_xpath(
+                continueLastJoin = self.bot.find_element_by_xpath(
                     "/html/body/div[5]/div[2]/div/div/div/div[1]/div/div/div[2]/div/button"
                 )
                 continueLastJoin.send_keys(Keys.RETURN)
@@ -103,21 +99,20 @@ class loginBot:
                 time.sleep(10)
 
         time.sleep(10)
-        partecipa = bot.find_element_by_xpath(
+        partecipa = self.bot.find_element_by_xpath(
             "/html/body/div[2]/div[2]/div[2]/div[1]/div/calling-pre-join-screen/div/div/div[2]/div[1]/div[2]/div/div/section/div[1]/div/div/button"
         )
         partecipa.send_keys(Keys.RETURN)
         time.sleep(3)
 
     def closeTabs(self):
-        bot = self.bot
         time.sleep(3)
-        microphoneAd = bot.find_element_by_xpath(
+        microphoneAd = self.bot.find_element_by_xpath(
             "/html/body/div[2]/div[2]/div[2]/div[1]/div/calling-screen/div/div[2]/calling-unified-bar/calling-alert/div/div/div/calling-ufd-popup/div/div[2]/div[4]/button"
         )
         microphoneAd.send_keys(Keys.RETURN)
 
-        notificationAd = bot.find_element_by_xpath(
+        notificationAd = self.bot.find_element_by_xpath(
             "/html/body/div[1]/div/div/div[2]/div/button[2]"
         )
         notificationAd.send_keys(Keys.RETURN)
