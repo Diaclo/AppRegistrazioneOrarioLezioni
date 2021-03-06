@@ -35,10 +35,10 @@ class App(QMainWindow):
 
     def openDialog(self):
         dialog = CustomDialog(self)
+        dialog.center()
         dialog.exec()
 
     def eseguiScheduler(self):
-        # TODO: guardare bene la creazione e la cancellazione di una class
         if self.esegui.isChecked():
             self.modificaEsegui(True, 'In esecuzione...', 'icon2.png')
             self.sched.accensione()
@@ -88,15 +88,17 @@ class CustomDialog(QDialog):
         self.layout.addLayout(self.buttonBox)
         self.setLayout(self.layout)
 
-    def aggiungiLinea(self):
+        self.precaricamento()
+
+    def aggiungiLinea(self, default=..., orario="", teams=""):
         self.Rimuovi.setDisabled(False)
         self.Salva.setDisabled(False)
 
         hbox = QHBoxLayout()
 
         textCorso = QLabel(f'Corso {len(self.layout)}')
-        editOrario = QLineEdit(self)
-        editTeams = QLineEdit(self)
+        editOrario = QLineEdit(orario)
+        editTeams = QLineEdit(teams)
         hbox.addWidget(textCorso)
         hbox.addWidget(editOrario)
         hbox.addWidget(editTeams)
@@ -122,6 +124,12 @@ class CustomDialog(QDialog):
             widget = item.widget()
             widget.deleteLater()
 
+    def precaricamento(self):
+        with open('pyschedule.csv', "r") as csv_file:
+            reader = csv.reader(csv_file)
+            for row in reader:
+                self.aggiungiLinea(orario=row[1], teams=row[2])
+
     def save(self):
         # path = QFileDialog.getSaveFileName(self, 'Save File', os.getenv('HOME'), 'CSV(*.csv')
         widget = []
@@ -136,7 +144,16 @@ class CustomDialog(QDialog):
                     widget.append(w.itemAt(j).widget().text())
                 writer.writerow(widget[counter:])
                 counter += 3
+        self.close()
 
+    def center(self):
+        frameGm = self.frameGeometry()
+        # Returns the index of the screen that contains cursor
+        screen = QApplication.desktop().screenNumber(QApplication.desktop().cursor().pos())
+        # Returns the geometry of the screen which contains widget
+        centerPoint = QApplication.desktop().screenGeometry(screen).center()
+        frameGm.moveCenter(centerPoint)
+        self.move(frameGm.topLeft())
 
 def main():
     app = QApplication(sys.argv)
