@@ -7,9 +7,12 @@ import win32gui
 from dragonfly import Window
 import time
 import os
+from windowcapture import WindowCapture
+
+
 
 class recordVideo:
-   def __init__(self, durataVideo, nomeVideo, windowName):
+   def __init__(self, durataVideo, nomeVideo):
   
       # tengo per ora variabili intermedie per testing,
       # alla fine sarà presente solo la conversione in ora e
@@ -21,14 +24,16 @@ class recordVideo:
       fps = 24.0
       self.durata = durataVideo * int(fps)
       self.nome = nomeVideo + ".mp4"
-      self.windowName = windowName
       screenSize = pyautogui.size()
       outCodec = cv2.VideoWriter_fourcc(*'mp4v')
       prop = cv2.WINDOW_FULLSCREEN
       out = cv2.VideoWriter(self.nome, outCodec, fps, screenSize)
 
+      wincap = WindowCapture('Google - Google Chrome')
+
       for i in range( self.durata ):
-         img = pyautogui.screenshot()
+         #img = pyautogui.screenshot()
+         img = wincap.get_screenshot()
          frame = numpy.array(img)
          frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
          out.write(frame)
@@ -37,25 +42,4 @@ class recordVideo:
       out.release()
       print('...registrazione completata...')
 
-wn = win32gui.GetWindowText(win32gui.GetForegroundWindow())
-print( wn )
-
-wl = Window.get_matching_windows(executable=None, title='GitHub Desktop')
-print(wl)
-
-z1 = pygetwindow.getAllTitles()
-print(z1)
-
-# get screensize
-x,y = pyautogui.size()
-print(f"width={x}\theight={y}")
-
-x2,y2 = pyautogui.size()
-x2,y2=int(str(x2)),int(str(y2))
-print(x2//2)
-print(y2//2)
-
-my = pygetwindow.getWindowsWithTitle(z1[4])
-print(my)
-
-#video = recordVideo( 10, 'prova', str(wn) )
+video = recordVideo( 10, 'prova')
