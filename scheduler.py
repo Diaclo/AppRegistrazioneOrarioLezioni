@@ -8,28 +8,29 @@ from datetime import datetime, date
 
 class Scheduler:
     sched = None
-    orariOggiFine = None
+    # orariOggiFine = None
 
     def __init__(self):
         self.sched = BackgroundScheduler(daemon=True)
         thread = Thread(target=self.settaggioJobs)
         thread.start()
-        print("thread started... ")
+        print("waiting... scheduler is loading")
         thread.join()
-        print("thread finished... exiting")
+        print("scheduler is ready... ")
 
     def settaggioJobs(self):
         corsi = self.leggiFile()
         for i in corsi:
             scrape = WebScraper(corsi[i][1])
-            #date.today()
-            #datetime(2021, 3, 4).date()
+            # date.today()
+            # datetime(2021, 3, 4).date()
             orariOggiInizio = [k for k in scrape.orarioInizio if datetime(2021, 3, 4).date() == k.date()]
-            orariOggiFine = [k for k in scrape.orarioFine if datetime(2021, 3, 4).date() == k.date()]
+            # orariOggiFine = [k for k in scrape.orarioFine if datetime(2021, 3, 4).date() == k.date()]
 
-            for j in orariOggiInizio:
-                self.sched.add_job(self.driver, 'interval', [corsi[i][0]], seconds=1)
-                self.sched.add_job(lambda: print('Anthony'), 'date', run_date=str(j))
+            if orariOggiInizio:
+                for j in orariOggiInizio:
+                    self.sched.add_job(self.driver, 'interval', [corsi[i][0]], seconds=1)
+                    self.sched.add_job(lambda: print('Anthony'), 'date', run_date=str(j))
 
     def leggiFile(self):
         with open('pyschedule.csv') as csv_file:
@@ -42,7 +43,6 @@ class Scheduler:
 
     def driver(self, urlTeams):
         navigator = Navigator('account', 'password', urlTeams)
-
 
     def accensione(self):
         self.sched.start()

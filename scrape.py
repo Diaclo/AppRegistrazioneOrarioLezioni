@@ -18,17 +18,22 @@ class WebScraper:
 
     def __init__(self, url):
         self.url = url
-        orario = []
-        html = requests.get(url).content
-        soup = BeautifulSoup(html, 'html.parser')
-        table = soup.findAll('table', {"id": "elenco"})
-        for tr in table[0].findAll('tr'):
-            tds = tr.find_all('td')
-            for td in tds:
-                if not any(ext in td.text for ext in exceptions):
-                    orario.append(self.formattazioneOrario(td.text).strip())
-        self.scissioneOrario([self.meseToMonth(orario[i]) + ' ' + orario[i + 1] for i in range(0, len(orario) - 1, 2)])
-        del orario
+        if self.url.startswith("https://"):
+            orario = []
+            html = requests.get(url).content
+            soup = BeautifulSoup(html, 'html.parser')
+            table = soup.findAll('table', {"id": "elenco"})
+            for tr in table[0].findAll('tr'):
+                tds = tr.find_all('td')
+                for td in tds:
+                    if not any(ext in td.text for ext in exceptions):
+                        orario.append(self.formattazioneOrario(td.text).strip())
+            self.scissioneOrario([self.meseToMonth(orario[i]) + ' ' + orario[i + 1] for i in range(0, len(orario) - 1, 2)])
+            del orario
+        else:
+            print("Not valid URL")
+            self.orarioInizio.clear()
+            self.orarioFine.clear()
 
     def scissioneOrario(self, lista_orario):
         for data in lista_orario:
