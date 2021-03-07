@@ -13,8 +13,8 @@ class Scheduler:
     def __init__(self):
         self.sched = BackgroundScheduler(daemon=True)
         thread = Thread(target=self.settaggioJobs)
-        thread.start()
         print("waiting... scheduler is loading")
+        thread.start()
         thread.join()
         print("scheduler is ready... ")
 
@@ -42,7 +42,8 @@ class Scheduler:
             return d
 
     def driver(self, urlTeams):
-        navigator = Navigator('account', 'password', urlTeams)
+        import credentials
+        navigator = Navigator(credentials.account, credentials.password, urlTeams)
 
     def accensione(self):
         self.sched.start()

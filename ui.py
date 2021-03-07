@@ -5,7 +5,7 @@ from scheduler import Scheduler
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
-
+import credentials
 
 # System Tray
 class App(QMainWindow):
@@ -54,6 +54,7 @@ class App(QMainWindow):
 
 # Dialog
 class CustomDialog(QDialog):
+
     def __init__(self, parent=None):
         super(CustomDialog, self).__init__(parent)
         self.setFixedWidth(420)
@@ -69,6 +70,19 @@ class CustomDialog(QDialog):
         self.Cancella = QPushButton('Cancella')
         self.UrlOrario = QLabel('Url Orario')
         self.UrlTeams = QLabel('Url Teams')
+
+        # Account e Password
+        hboxAccountPassword = QHBoxLayout()
+        self.Account = QLabel('Account: ')
+        self.AccountLine = QLineEdit(credentials.account)
+        self.Password = QLabel('Password: ')
+        self.PasswordLine = QLineEdit(credentials.password)
+        self.PasswordLine.setEchoMode(QLineEdit.Password)
+        hboxAccountPassword.addWidget(self.Account)
+        hboxAccountPassword.addWidget(self.AccountLine)
+        hboxAccountPassword.addWidget(self.Password)
+        hboxAccountPassword.addWidget(self.PasswordLine)
+
         self.Rimuovi.setDisabled(True)
         self.Salva.setDisabled(True)
         self.Aggiungi.clicked.connect(self.aggiungiLinea)
@@ -82,9 +96,10 @@ class CustomDialog(QDialog):
         self.buttonBox.addWidget(self.Rimuovi, 0, 1)
         self.buttonBox.addWidget(self.Salva, 1, 0)
         self.buttonBox.addWidget(self.Cancella, 1, 1)
-        self.buttonBox.addWidget(self.UrlOrario, 2, 1)
-        self.buttonBox.addWidget(self.UrlTeams, 2, 0)
+        self.buttonBox.addWidget(self.UrlOrario, 3, 1)
+        self.buttonBox.addWidget(self.UrlTeams, 3, 0)
 
+        self.layout.addLayout(hboxAccountPassword)
         self.layout.addLayout(self.buttonBox)
         self.setLayout(self.layout)
 
@@ -96,7 +111,7 @@ class CustomDialog(QDialog):
 
         hbox = QHBoxLayout()
 
-        textCorso = QLabel(f'Corso {len(self.layout)}')
+        textCorso = QLabel(f'Corso {len(self.layout)-1}')
         editOrario = QLineEdit(orario)
         editTeams = QLineEdit(teams)
         hbox.addWidget(textCorso)
@@ -104,7 +119,7 @@ class CustomDialog(QDialog):
         hbox.addWidget(editTeams)
 
         self.layout.addLayout(hbox)
-        if len(self.layout) >= 6:
+        if len(self.layout) >= 7:
             self.Aggiungi.setDisabled(True)
 
     def rimuoviLinea(self):
@@ -114,7 +129,7 @@ class CustomDialog(QDialog):
         self.pulisciLayout(hbox)
         hbox.deleteLater()
         self.adjustSize()
-        if len(self.layout) <= 2:
+        if len(self.layout) <= 3:
             self.Salva.setDisabled(True)
             self.Rimuovi.setDisabled(True)
 
@@ -131,19 +146,22 @@ class CustomDialog(QDialog):
                 self.aggiungiLinea(orario=row[1], teams=row[2])
 
     def save(self):
-        # path = QFileDialog.getSaveFileName(self, 'Save File', os.getenv('HOME'), 'CSV(*.csv')
         widget = []
         counter = 0
-        # if path[0] != '':
         with open('pyschedule.csv', "w") as csv_file:
             writer = csv.writer(csv_file, dialect='excel')
+            # skip hboxAccountPassword
             # skip QGridLayout
-            hbox = (self.layout.itemAt(i) for i in range(1, self.layout.count()))
+            hbox = (self.layout.itemAt(i) for i in range(2, self.layout.count()))
             for w in hbox:
                 for j in range(w.count()):
                     widget.append(w.itemAt(j).widget().text())
                 writer.writerow(widget[counter:])
                 counter += 3
+
+            # TODO: Account e Password provvisori
+            credentials.account = self.layout.itemAt(0).itemAt(1).widget().text()
+            credentials.password = self.layout.itemAt(0).itemAt(3).widget().text()
         self.close()
 
     def center(self):
