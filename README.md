@@ -14,6 +14,8 @@ application of web scraping of Orario Lezioni UNIBO and recording by schedule.
 * schedule<br />
 * selenium driver to go on web page<br/>  
 
+<hr />
+
 ## TODO ;
 * record video and audio<br/>
 * upload to synology NAS<br/> 
