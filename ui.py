@@ -39,12 +39,22 @@ class App(QMainWindow):
         dialog.exec()
 
     def eseguiScheduler(self):
-        if self.esegui.isChecked():
-            self.modificaEsegui(True, 'In esecuzione...', 'icon2.png')
-            self.sched.accensione()
+        if not credentials.account == "" or not credentials.password == "":
+            if self.esegui.isChecked():
+                self.modificaEsegui(True, 'In esecuzione...', 'icon2.png')
+                self.sched.accensione()
+            else:
+                self.modificaEsegui(False, 'Esegui in background', 'icon.png')
+                self.sched.spegnimento()
         else:
-            self.modificaEsegui(False, 'Esegui in background', 'icon.png')
-            self.sched.spegnimento()
+            self.esegui.setChecked(False)
+            msg = QMessageBox()
+            # msg.setStyleSheet("QLabel{min-width: 120px;}");
+            msg.setIcon(QMessageBox.Critical)
+            msg.setText("Errore")
+            msg.setInformativeText('Inserisci le credenziali')
+            msg.setWindowTitle("Errore")
+            msg.exec_()
 
     def modificaEsegui(self, boolean, testo, path):
         self.esegui.setChecked(boolean)
